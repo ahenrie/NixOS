@@ -10,6 +10,10 @@
       ./hardware-configuration.nix
     ];
 
+######################## QEMU ###################################
+virtualisation.libvirtd.enable = true;
+programs.virt-manager.enable = true;
+
 ######################### Nvidia ##################################
   #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
@@ -184,7 +188,7 @@
   users.users.based = {
     isNormalUser = true;
     description = "based";
-    extraGroups = [ "networkmanager" "wheel" "audio" "sound" "video"];
+    extraGroups = [ "networkmanager" "wheel" "audio" "sound" "video" "libvirtd"];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -206,7 +210,24 @@
   	(nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono""0xProto" ]; })
   ];
 
+  # Hyperland
+  programs.hyprland = {
+    # Install the packages from nixpkgs
+    enable = true;
+    # Whether to enable XWayland
+    xwayland.enable = true;
+  };
 
+   xdg.portal.enable = true;
+   #xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+
+  # Virtual Box
+   virtualisation.virtualbox.host.enable = true;
+   virtualisation.virtualbox.host.enableKvm = false;
+   virtualisation.virtualbox.guest.clipboard = true;
+   virtualisation.virtualbox.guest.enable = true;
+   users.extraGroups.vboxusers.members = [ "based" ];
 
 
   # List packages installed in system profile. To search, run:
@@ -219,23 +240,41 @@
 	pkgs.fastfetch
 	pkgs.mullvad-vpn
 	pkgs.mullvad-browser
-        #pkgs.zed-editor
 	#pkgs.gnome-console
 	pkgs.tilix
+	pkgs.kitty
 	pkgs.git	
 	pkgs.nerdfonts
+	pkgs.discord
+	pkgs.qbittorrent
+	pkgs.obsidian
+	pkgs.wofi
+	pkgs.libsForQt5.dolphin
+	#pkgs.virtualbox
+	pkgs.linuxKernel.packages.linux_xanmod_stable.virtualbox
 
         # System Packages
         #pkgs.pipewire
+	libgcc
 	pkgs.rPackages.pcutils
 	pkgs.lshw
 	pkgs.python3
 	pkgs.go
-	pkgs.libgcc
-
-
+	#pkgs.gcc
+	#pkgs.gcc-toolchain
+	#pkgs.clang
+	pkgs.libreoffice
+        pkgs.qemu
+        
 	# Lightdm instead of GDM for display manager
 	#pkgs.lightdm
+
+	# Additional Hyperland
+	waybar
+	dunst
+	libnotify
+	rofi-wayland
+	swww
 
 	#Gnome Extensions
 	pkgs.gnome.gnome-tweaks
@@ -275,3 +314,4 @@
   system.stateVersion = "24.05"; # Did you read the comment?
 
 }
+
